@@ -1,5 +1,11 @@
+import CalendarHeader from "component/calendarHeader";
+
 function Home() {
-  return <div className="home">Hello!</div>;
+  return (
+    <div className="home">
+      <CalendarHeader />
+    </div>
+  );
 }
 
 export default Home;
