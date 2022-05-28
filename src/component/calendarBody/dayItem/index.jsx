@@ -19,7 +19,7 @@ function DayItem({ children, type }) {
   }, [type]);
 
   return (
-    <ItemContainer className={renderTypeCss} clickable={false}>
+    <ItemContainer className={renderTypeCss} clickable={true}>
       {children}
     </ItemContainer>
   );
