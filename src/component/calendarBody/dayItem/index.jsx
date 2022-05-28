@@ -10,9 +10,9 @@ function DayItem({ children, type }) {
   const renderTypeCss = useMemo(() => {
     switch (type) {
       case Type.Selected:
-        return "rounded-full bg-[#ff0000] text-[#ffffff]";
+        return "rounded-full bg-[#db3d44] text-[#ffffff]";
       case Type.Disabled:
-        return "text-[#cdcdcd]";
+        return "text-[#eeeeee]";
       default:
         return "";
     }
