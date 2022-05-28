@@ -4,8 +4,9 @@ import { faAngleRight } from "@fortawesome/free-solid-svg-icons/faAngleRight";
 
 function CalendarHeader() {
   return (
-    <div>
+    <div className="flex">
       <FontAwesomeIcon icon={faAngleLeft}></FontAwesomeIcon>
+      <div>May 2018</div>
       <FontAwesomeIcon icon={faAngleRight}></FontAwesomeIcon>
     </div>
   );
