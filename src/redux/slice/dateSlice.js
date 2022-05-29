@@ -9,21 +9,22 @@ const dateSlice = createSlice({
       week: 0,
       day: 0,
     },
+    selectedDate: {
+      year: 0,
+      month: 0,
+      week: 0,
+      day: 0,
+    },
     relatedDate: [],
   },
   reducers: {
     setupDate() {},
     successForSetup(state, action) {
-      const { currentDate, relatedDate } = action.payload;
-      const { year, month, week, day } = currentDate;
+      const { currentDate, selectedDate, relatedDate } = action.payload;
       return {
         ...state,
-        currentDate: {
-          year,
-          month,
-          week,
-          day,
-        },
+        currentDate,
+        selectedDate,
         relatedDate,
       };
     },

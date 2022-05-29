@@ -19,13 +19,19 @@ function* setupDateSaga(action) {
       year: targetDate.getFullYear(),
       month: targetDate.getMonth() + 1,
       week: targetDate.getDay(),
-      day: dateTime.getDate(),
+      day: targetDate.getDate(),
     };
   });
 
   yield put(
     successForSetup({
       currentDate: {
+        year,
+        month,
+        week,
+        day,
+      },
+      selectedDate: {
         year,
         month,
         week,
