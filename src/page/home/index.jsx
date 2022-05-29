@@ -1,4 +1,4 @@
-import CalendarHeader, { Type } from "component/calendarHeader";
+import CalendarHeader from "component/calendarHeader";
 import CalendarBody from "component/calendarBody";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -12,7 +12,7 @@ function Home() {
 
   return (
     <div className="p-2 md:border md:border-[#cdcdcd] md:w-96 w-full md:m-2">
-      <CalendarHeader type={Type.DateHeader} />
+      <CalendarHeader />
       <CalendarBody />
     </div>
   );

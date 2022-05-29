@@ -1,29 +1,24 @@
 import DateHeader from "component/calendarHeader/dateHeader";
 import { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { CalendarMode } from "constant/calendar";
 
-const Type = {
-  DateHeader: "dateHeader",
-  MonthHeader: "monthHeader",
-  YearHeader: "yearHeader",
-};
-
-function CalendarHeader({ type }) {
+function CalendarHeader() {
+  const { mode } = useSelector((state) => state.calendar);
   const renderHeader = useMemo(() => {
-    switch (type) {
-      case Type.DateHeader:
-        return <DateHeader></DateHeader>;
-
+    switch (mode) {
+      case CalendarMode.Date:
+        return <DateHeader />;
       default:
         return <></>;
     }
-  }, [type]);
+  }, [mode]);
 
   return (
-    <div className="w-full flex justify-between items-center px-1 py-3">
+    <div className="w-full flex justify-between items-center px-3 py-3">
       {renderHeader}
     </div>
   );
 }
 
-export { Type };
 export default CalendarHeader;
