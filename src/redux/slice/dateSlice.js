@@ -1,14 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { convertDateToObj } from "util/dateUtil";
 
 const dateSlice = createSlice({
   name: "date",
   initialState: {
-    currentDate: {
-      year: 0,
-      month: 0,
-      week: 0,
-      day: 0,
-    },
+    currentDate: convertDateToObj(new Date()),
     selectedDate: {
       year: 0,
       month: 0,
@@ -20,15 +16,15 @@ const dateSlice = createSlice({
   reducers: {
     setupDate() {},
     successForSetup(state, action) {
-      const { currentDate, selectedDate, relatedDate } = action.payload;
+      const { selectedDate, relatedDate } = action.payload;
       return {
         ...state,
-        currentDate,
         selectedDate,
         relatedDate,
       };
     },
     switchDate() {},
+    switchDay() {},
     updateSelectedDate(state, action) {
       const date = action.payload;
       return {
@@ -39,6 +35,11 @@ const dateSlice = createSlice({
   },
 });
 
-export const { setupDate, successForSetup, switchDate, updateSelectedDate } =
-  dateSlice.actions;
+export const {
+  setupDate,
+  successForSetup,
+  switchDate,
+  switchDay,
+  updateSelectedDate,
+} = dateSlice.actions;
 export default dateSlice.reducer;

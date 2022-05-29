@@ -1,56 +1,29 @@
+import DateHeader from "component/calendarHeader/dateHeader";
 import { useMemo } from "react";
-import { useSelector } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft } from "@fortawesome/free-solid-svg-icons/faAngleLeft";
-import { faAngleRight } from "@fortawesome/free-solid-svg-icons/faAngleRight";
 
-function CalendarHeader() {
-  const { year, month } = useSelector((state) => state.date.currentDate);
+const Type = {
+  DateHeader: "dateHeader",
+  MonthHeader: "monthHeader",
+  YearHeader: "yearHeader",
+};
 
-  const renderMonth = useMemo(() => {
-    switch (month) {
-      case 1:
-        return "January";
-      case 2:
-        return "February";
-      case 3:
-        return "March";
-      case 4:
-        return "April";
-      case 5:
-        return "May";
-      case 6:
-        return "June";
-      case 7:
-        return "July";
-      case 8:
-        return "August";
-      case 9:
-        return "September";
-      case 10:
-        return "October";
-      case 11:
-        return "November";
-      case 12:
-        return "December";
+function CalendarHeader({ type }) {
+  const renderHeader = useMemo(() => {
+    switch (type) {
+      case Type.DateHeader:
+        return <DateHeader></DateHeader>;
+
       default:
-        return "";
+        return <></>;
     }
-  }, [month]);
+  }, [type]);
 
   return (
     <div className="w-full flex justify-between items-center px-1 py-3">
-      <FontAwesomeIcon
-        className="cursor-pointer"
-        icon={faAngleLeft}
-      ></FontAwesomeIcon>
-      <div className="cursor-pointer">{`${renderMonth} ${year}`}</div>
-      <FontAwesomeIcon
-        className="cursor-pointer"
-        icon={faAngleRight}
-      ></FontAwesomeIcon>
+      {renderHeader}
     </div>
   );
 }
 
+export { Type };
 export default CalendarHeader;
