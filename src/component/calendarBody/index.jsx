@@ -1,9 +1,11 @@
 import { useEffect, useCallback, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import DayItem, { Type } from "./dayItem";
 import WeekBar from "./weekBar";
+import { switchDate } from "redux/slice/dateSlice";
 
 function CalendarBody() {
+  const dispatch = useDispatch();
   const { currentDate, selectedDate, relatedDate } = useSelector(
     (state) => state.date
   );
@@ -77,13 +79,14 @@ function CalendarBody() {
           <DayItem
             key={`${date.year}-${date.month}-${date.day}`}
             type={calculateDateType(date)}
+            onClick={() => dispatch(switchDate(date))}
           >
             {date.day}
           </DayItem>
         ))}
       </div>
     ));
-  }, [dateGroup, calculateDateType]);
+  }, [dispatch, dateGroup, calculateDateType]);
 
   return (
     <div className="w-full">

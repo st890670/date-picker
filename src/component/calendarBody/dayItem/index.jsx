@@ -8,7 +8,7 @@ const Type = {
   Normal: "normal",
 };
 
-function DayItem({ children, type }) {
+function DayItem({ children, type, onClick = () => {} }) {
   const renderTypeCss = useMemo(() => {
     switch (type) {
       case Type.TodayWithoutSelected:
@@ -24,7 +24,7 @@ function DayItem({ children, type }) {
   }, [type]);
 
   return (
-    <ItemContainer className={renderTypeCss} clickable={true}>
+    <ItemContainer className={renderTypeCss} clickable={true} onClick={onClick}>
       {children}
     </ItemContainer>
   );

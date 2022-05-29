@@ -28,8 +28,17 @@ const dateSlice = createSlice({
         relatedDate,
       };
     },
+    switchDate() {},
+    updateSelectedDate(state, action) {
+      const date = action.payload;
+      return {
+        ...state,
+        selectedDate: date,
+      };
+    },
   },
 });
 
-export const { setupDate, successForSetup } = dateSlice.actions;
+export const { setupDate, successForSetup, switchDate, updateSelectedDate } =
+  dateSlice.actions;
 export default dateSlice.reducer;
