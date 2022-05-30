@@ -1,6 +1,8 @@
 import { useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ItemContainer, { Type } from "component/calendarBody/itemContainer";
+import ItemContainer, {
+  Type,
+} from "component/calendar/calendarBody/itemContainer";
 import { switchDate } from "redux/slice/dateSlice";
 import { changeMode } from "redux/slice/calendarSlice";
 import { CalendarMode } from "constant/calendar";

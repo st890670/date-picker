@@ -1,4 +1,4 @@
-import ItemContainer from "component/calendarBody/itemContainer";
+import ItemContainer from "component/calendar/calendarBody/itemContainer";
 
 function WeekBar() {
   return (

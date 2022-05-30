@@ -2,9 +2,9 @@ import { useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CalendarMode } from "constant/calendar";
 import { changeMode } from "redux/slice/calendarSlice";
-import DateHeader from "component/calendarHeader/dateHeader";
-import MonthHeader from "component/calendarHeader/monthHeader";
-import YearHeader from "component/calendarHeader/yearHeader";
+import DateHeader from "component/calendar/calendarHeader/dateHeader";
+import MonthHeader from "component/calendar/calendarHeader/monthHeader";
+import YearHeader from "component/calendar/calendarHeader/yearHeader";
 
 function CalendarHeader() {
   const { mode } = useSelector((state) => state.calendar);

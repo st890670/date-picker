@@ -1,9 +1,11 @@
 import { useEffect, useCallback, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import DayItem, { Type } from "component/calendarBody/clickableItem";
-import WeekBar from "component/calendarBody/dateBody/weekBar";
+import WeekBar from "component/calendar/calendarBody/dateBody/weekBar";
+import ItemContainer, {
+  Type,
+} from "component/calendar/calendarBody/itemContainer";
 import { switchDate } from "redux/slice/dateSlice";
-import ItemContainer, { Type } from "component/calendarBody/itemContainer";
+
 function DateBody() {
   const dispatch = useDispatch();
   const { currentDate, selectedDate, relatedDate } = useSelector(

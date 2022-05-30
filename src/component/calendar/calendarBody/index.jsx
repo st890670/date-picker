@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { CalendarMode } from "constant/calendar";
-import DateBody from "component/calendarBody/dateBody";
-import MonthBody from "component/calendarBody/monthBody";
-import YearBody from "component/calendarBody/yearBody";
+import DateBody from "component/calendar/calendarBody/dateBody";
+import MonthBody from "component/calendar/calendarBody/monthBody";
+import YearBody from "component/calendar/calendarBody/yearBody";
 
 function CalendarBody() {
   const { mode } = useSelector((state) => state.calendar);
