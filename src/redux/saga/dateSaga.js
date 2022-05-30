@@ -2,7 +2,8 @@ import { takeLatest, put, select, call } from "redux-saga/effects";
 import {
   setupDate,
   switchDate,
-  switchDay,
+  plusDay,
+  plusMonth,
   successForSetup,
   updateSelectedDate,
 } from "redux/slice/dateSlice";
@@ -38,9 +39,8 @@ function* switchDateSaga(action) {
   yield call(updateDate, targetDate);
 }
 
-function* switchDaySaga(action) {
+function* plusDaySaga(action) {
   const dayAmount = action.payload;
-  console.log(dayAmount);
   const selectedDate = yield select((state) => state.date.selectedDate);
   const { year, month, day } = selectedDate;
   const selectedDateTime = new Date(`${year}-${month}-${day}`).getTime();
@@ -48,6 +48,19 @@ function* switchDaySaga(action) {
     selectedDateTime + dayAmount * (24 * 60 * 60 * 1000)
   );
   yield call(updateDate, convertDateToObj(prevDate));
+}
+
+function* plusMonthSaga(action) {
+  const monthAmount = action.payload;
+  console.log(monthAmount);
+  const selectedDate = yield select((state) => state.date.selectedDate);
+  const { year, month } = selectedDate;
+  const newMonth = Math.abs(month + monthAmount) % 12 || 12;
+
+  yield call(
+    updateDate,
+    convertDateToObj(new Date(`${year}-${newMonth}-${1}`))
+  );
 }
 
 function* updateDate(targetDate) {
@@ -68,10 +81,19 @@ function* watchSwitchDate() {
   yield takeLatest(switchDate, switchDateSaga);
 }
 
-function* watchSwitchDay() {
-  yield takeLatest(switchDay, switchDaySaga);
+function* watchPlusDay() {
+  yield takeLatest(plusDay, plusDaySaga);
 }
 
-const all = [watchSetupDate(), watchSwitchDate(), watchSwitchDay()];
+function* watchPlusMonth() {
+  yield takeLatest(plusMonth, plusMonthSaga);
+}
+
+const all = [
+  watchSetupDate(),
+  watchSwitchDate(),
+  watchPlusDay(),
+  watchPlusMonth(),
+];
 
 export default all;

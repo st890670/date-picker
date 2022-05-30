@@ -7,7 +7,13 @@ const calendarSlice = createSlice({
     mode: CalendarMode.Date,
   },
   reducers: {
-    changeMode() {},
+    changeMode(state, action) {
+      const mode = action.payload;
+      return {
+        ...state,
+        mode,
+      };
+    },
   },
 });
 

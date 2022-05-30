@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons/faAngleLeft";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons/faAngleRight";
-import { switchDay } from "redux/slice/dateSlice";
+import { plusDay } from "redux/slice/dateSlice";
 
-function DateHeader() {
+function DateHeader({ onTitleClick = () => {} }) {
   const dispatch = useDispatch();
   const { year, month } = useSelector((state) => state.date.selectedDate);
 
@@ -41,11 +41,11 @@ function DateHeader() {
   }, [month]);
 
   const handleClickPrev = useCallback(() => {
-    dispatch(switchDay(-1));
+    dispatch(plusDay(-1));
   }, [dispatch]);
 
   const handleClickNext = useCallback(() => {
-    dispatch(switchDay(1));
+    dispatch(plusDay(1));
   }, [dispatch]);
 
   return (
@@ -55,7 +55,10 @@ function DateHeader() {
         icon={faAngleLeft}
         onClick={handleClickPrev}
       />
-      <div className="cursor-pointer">{`${renderMonth} ${year}`}</div>
+      <div
+        className="cursor-pointer"
+        onClick={onTitleClick}
+      >{`${renderMonth} ${year}`}</div>
       <FontAwesomeIcon
         className="cursor-pointer"
         icon={faAngleRight}

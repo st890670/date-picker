@@ -24,7 +24,8 @@ const dateSlice = createSlice({
       };
     },
     switchDate() {},
-    switchDay() {},
+    plusDay() {},
+    plusMonth() {},
     updateSelectedDate(state, action) {
       const date = action.payload;
       return {
@@ -39,7 +40,8 @@ export const {
   setupDate,
   successForSetup,
   switchDate,
-  switchDay,
+  plusDay,
+  plusMonth,
   updateSelectedDate,
 } = dateSlice.actions;
 export default dateSlice.reducer;
