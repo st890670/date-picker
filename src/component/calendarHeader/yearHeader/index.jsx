@@ -1,21 +1,21 @@
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons/faAngleLeft";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons/faAngleRight";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useMemo } from "react";
-import { useSelector } from "react-redux";
+import { prevRelatedYear, nextRelatedYear } from "redux/slice/dateSlice";
 
 function YearHeader() {
-  const { year } = useSelector((state) => state.date.selectedDate);
+  const dispatch = useDispatch();
+  const { relatedYear } = useSelector((state) => state.date);
 
-  const handleClickPrev = useCallback(() => {}, []);
+  const handleClickPrev = useCallback(() => {
+    dispatch(prevRelatedYear());
+  }, [dispatch]);
 
-  const handleClickNext = useCallback(() => {}, []);
-
-  const renderYearRange = useMemo(() => {
-    const yearArray = `${year}`.split("");
-    const yearPrefix = yearArray.slice(0, yearArray.length - 1).join("");
-    return `${yearPrefix}1 - ${yearPrefix}9`;
-  }, [year]);
+  const handleClickNext = useCallback(() => {
+    dispatch(nextRelatedYear());
+  }, [dispatch]);
 
   return (
     <>
@@ -24,7 +24,9 @@ function YearHeader() {
         icon={faAngleLeft}
         onClick={handleClickPrev}
       />
-      <div className="cursor-pointer">{renderYearRange}</div>
+      <div className="cursor-pointer">{`${relatedYear[1]} - ${
+        relatedYear[relatedYear.length - 2]
+      }`}</div>
       <FontAwesomeIcon
         className="cursor-pointer"
         icon={faAngleRight}

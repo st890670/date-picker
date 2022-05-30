@@ -28,6 +28,17 @@ const dateSlice = createSlice({
     switchDate() {},
     plusDay() {},
     plusMonth() {},
+    plusYear() {},
+    prevRelatedYear() {},
+    nextRelatedYear() {},
+    plusRelatedYear(state, action) {
+      const { relatedYear, selectedDate } = action.payload;
+      return {
+        ...state,
+        relatedYear,
+        selectedDate,
+      };
+    },
     updateSelectedDate(state, action) {
       const date = action.payload;
       return {
@@ -44,6 +55,10 @@ export const {
   switchDate,
   plusDay,
   plusMonth,
+  plusYear,
+  prevRelatedYear,
+  nextRelatedYear,
+  plusRelatedYear,
   updateSelectedDate,
 } = dateSlice.actions;
 export default dateSlice.reducer;

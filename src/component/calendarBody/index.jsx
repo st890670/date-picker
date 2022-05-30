@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { CalendarMode } from "constant/calendar";
 import DateBody from "component/calendarBody/dateBody";
 import MonthBody from "component/calendarBody/monthBody";
+import YearBody from "component/calendarBody/yearBody";
 
 function CalendarBody() {
   const { mode } = useSelector((state) => state.calendar);
@@ -13,6 +14,8 @@ function CalendarBody() {
         return <DateBody />;
       case CalendarMode.Month:
         return <MonthBody />;
+      case CalendarMode.Year:
+        return <YearBody />;
       default:
         return <></>;
     }

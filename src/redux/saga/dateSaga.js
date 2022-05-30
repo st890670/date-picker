@@ -1,10 +1,14 @@
-import { takeLatest, put, select, call } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import {
-  setupDate,
-  switchDate,
   plusDay,
   plusMonth,
+  plusYear,
+  setupDate,
   successForSetup,
+  switchDate,
+  prevRelatedYear,
+  nextRelatedYear,
+  plusRelatedYear,
   updateSelectedDate,
 } from "redux/slice/dateSlice";
 import { convertDateToObj } from "util/dateUtil";
@@ -58,7 +62,6 @@ function* plusDaySaga(action) {
 
 function* plusMonthSaga(action) {
   const monthAmount = action.payload;
-  console.log(monthAmount);
   const selectedDate = yield select((state) => state.date.selectedDate);
   const { year, month } = selectedDate;
   const newMonth = Math.abs(month + monthAmount) % 12 || 12;
@@ -66,6 +69,17 @@ function* plusMonthSaga(action) {
   yield call(
     updateDate,
     convertDateToObj(new Date(`${year}-${newMonth}-${1}`))
+  );
+}
+
+function* plusYearSaga(action) {
+  const yearAmount = action.payload;
+  const selectedDate = yield select((state) => state.date.selectedDate);
+  const { year, month } = selectedDate;
+
+  yield call(
+    updateDate,
+    convertDateToObj(new Date(`${year + yearAmount}-${month}-${1}`))
   );
 }
 
@@ -77,6 +91,29 @@ function* updateDate(targetDate) {
   } else {
     yield put(updateSelectedDate(targetDate));
   }
+}
+
+function* prevRelatedYearSaga() {
+  yield call(updateRelatedYearSage, -10);
+}
+
+function* nextRelatedYearSaga() {
+  yield call(updateRelatedYearSage, 10);
+}
+
+function* updateRelatedYearSage(amount = 0) {
+  const { relatedYear, selectedDate } = yield select((state) => state.date);
+
+  yield put(
+    plusRelatedYear({
+      relatedYear: relatedYear.map((num) => num + amount),
+      selectedDate: {
+        ...selectedDate,
+        year: selectedDate.year + amount,
+        day: 1,
+      },
+    })
+  );
 }
 
 function* watchSetupDate() {
@@ -95,11 +132,26 @@ function* watchPlusMonth() {
   yield takeLatest(plusMonth, plusMonthSaga);
 }
 
+function* watchPlusYear() {
+  yield takeLatest(plusYear, plusYearSaga);
+}
+
+function* watchPrevRelatedYear() {
+  yield takeLatest(prevRelatedYear, prevRelatedYearSaga);
+}
+
+function* watchNextRelatedYear() {
+  yield takeLatest(nextRelatedYear, nextRelatedYearSaga);
+}
+
 const all = [
   watchSetupDate(),
   watchSwitchDate(),
   watchPlusDay(),
   watchPlusMonth(),
+  watchPlusYear(),
+  watchPrevRelatedYear(),
+  watchNextRelatedYear(),
 ];
 
 export default all;
