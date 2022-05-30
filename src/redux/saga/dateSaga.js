@@ -21,6 +21,11 @@ function* setupDateSaga(action) {
     return convertDateToObj(targetDate);
   });
 
+  const firstOfRelatedYear = Math.floor(year / 10) * 10 - 1;
+  const relatedYear = new Array(12)
+    .fill(0)
+    .map((_, index) => firstOfRelatedYear + index);
+
   yield put(
     successForSetup({
       selectedDate: {
@@ -30,6 +35,7 @@ function* setupDateSaga(action) {
         day,
       },
       relatedDate,
+      relatedYear,
     })
   );
 }

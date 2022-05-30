@@ -68,7 +68,7 @@ function MonthBody() {
         ))}
       </div>
     ));
-  }, [renderType]);
+  }, [dispatch, selectedDate, renderType]);
 
   return <div className="px-3">{renderMonth}</div>;
 }

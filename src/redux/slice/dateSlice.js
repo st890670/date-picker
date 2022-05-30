@@ -12,15 +12,17 @@ const dateSlice = createSlice({
       day: 0,
     },
     relatedDate: [],
+    relatedYear: [],
   },
   reducers: {
     setupDate() {},
     successForSetup(state, action) {
-      const { selectedDate, relatedDate } = action.payload;
+      const { selectedDate, relatedDate, relatedYear } = action.payload;
       return {
         ...state,
         selectedDate,
         relatedDate,
+        relatedYear,
       };
     },
     switchDate() {},

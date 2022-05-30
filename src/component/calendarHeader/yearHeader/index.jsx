@@ -1,17 +1,15 @@
-import { useCallback, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons/faAngleLeft";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons/faAngleRight";
-import { plusDay } from "redux/slice/dateSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useCallback, useMemo } from "react";
+import { useSelector } from "react-redux";
 
-function YearHeader({}) {
-  const dispatch = useDispatch();
+function YearHeader() {
   const { year } = useSelector((state) => state.date.selectedDate);
 
-  const handleClickPrev = useCallback(() => {}, [dispatch]);
+  const handleClickPrev = useCallback(() => {}, []);
 
-  const handleClickNext = useCallback(() => {}, [dispatch]);
+  const handleClickNext = useCallback(() => {}, []);
 
   const renderYearRange = useMemo(() => {
     const yearArray = `${year}`.split("");
