@@ -1,86 +1,59 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import {
-  plusDay,
-  plusMonth,
-  plusYear,
   setupDate,
   successForSetup,
   switchDate,
+  prevMonth,
+  nextMonth,
+  updateRelatedDate,
+  prevYear,
+  nextYear,
+  updateRelatedMonth,
   prevRelatedYear,
   nextRelatedYear,
-  plusRelatedYear,
+  updateRelatedYear,
   updateSelectedDate,
 } from "redux/slice/dateSlice";
 import { convertDateToObj } from "util/dateUtil";
 
 function* setupDateSaga(action) {
   const { payload: selectedDate } = action;
-  const { year, month, week, day } = convertDateToObj(selectedDate);
+  const dateObj = convertDateToObj(selectedDate);
+  const { year, month } = dateObj;
+  const relatedDate = buildRelatedDate(year, month);
+  const firstOfRelatedYear = Math.floor(year / 10) * 10 - 1;
+  const relatedYear = new Array(12)
+    .fill(0)
+    .map((_, index) => firstOfRelatedYear + index);
+
+  const relatedMonth = new Array(12)
+    .fill(0)
+    .map((_, index) => ({ year, month: index + 1 }));
+
+  yield put(
+    successForSetup({
+      selectedDate: { ...dateObj },
+      relatedDate: { target: { year, month }, payload: relatedDate },
+      relatedYear,
+      relatedMonth,
+    })
+  );
+}
+
+function buildRelatedDate(year, month) {
   const firstDayOfCurrentMonth = new Date(`${year}-${month}-01`);
-  const relatedDate = new Array(42).fill(0).map((_, index) => {
+  return new Array(42).fill(0).map((_, index) => {
     const diffDay = index - firstDayOfCurrentMonth.getDay();
     const targetDate = new Date(
       firstDayOfCurrentMonth.getTime() + diffDay * 24 * 60 * 60 * 1000
     );
     return convertDateToObj(targetDate);
   });
-
-  const firstOfRelatedYear = Math.floor(year / 10) * 10 - 1;
-  const relatedYear = new Array(12)
-    .fill(0)
-    .map((_, index) => firstOfRelatedYear + index);
-
-  yield put(
-    successForSetup({
-      selectedDate: {
-        year,
-        month,
-        week,
-        day,
-      },
-      relatedDate,
-      relatedYear,
-    })
-  );
 }
 
 function* switchDateSaga(action) {
   const { payload: targetDate } = action;
   yield call(updateDate, targetDate);
-}
-
-function* plusDaySaga(action) {
-  const dayAmount = action.payload;
-  const selectedDate = yield select((state) => state.date.selectedDate);
-  const { year, month, day } = selectedDate;
-  const selectedDateTime = new Date(`${year}-${month}-${day}`).getTime();
-  const prevDate = new Date(
-    selectedDateTime + dayAmount * (24 * 60 * 60 * 1000)
-  );
-  yield call(updateDate, convertDateToObj(prevDate));
-}
-
-function* plusMonthSaga(action) {
-  const monthAmount = action.payload;
-  const selectedDate = yield select((state) => state.date.selectedDate);
-  const { year, month } = selectedDate;
-  const newMonth = Math.abs(month + monthAmount) % 12 || 12;
-
-  yield call(
-    updateDate,
-    convertDateToObj(new Date(`${year}-${newMonth}-${1}`))
-  );
-}
-
-function* plusYearSaga(action) {
-  const yearAmount = action.payload;
-  const selectedDate = yield select((state) => state.date.selectedDate);
-  const { year, month } = selectedDate;
-
-  yield call(
-    updateDate,
-    convertDateToObj(new Date(`${year + yearAmount}-${month}-${1}`))
-  );
 }
 
 function* updateDate(targetDate) {
@@ -93,25 +66,68 @@ function* updateDate(targetDate) {
   }
 }
 
+function* prevMonthSaga() {
+  yield call(updateRelatedDateSaga, false);
+}
+
+function* nextMonthSaga() {
+  yield call(updateRelatedDateSaga, true);
+}
+
+function* updateRelatedDateSaga(isNext) {
+  const { target } = yield select((state) => state.date.relatedDate);
+  const { year, month } = target;
+
+  let newYear = year;
+  if (isNext) {
+    newYear += month + 1 > 12 ? 1 : 0;
+  } else {
+    newYear += month - 1 < 1 ? -1 : 0;
+  }
+
+  const newMonth = (month + (isNext ? 1 : -1)) % 12 || 12;
+  yield put(
+    updateRelatedDate({
+      target: { year: newYear, month: newMonth },
+      payload: buildRelatedDate(newYear, newMonth),
+    })
+  );
+}
+
+function* prevYearSaga() {
+  yield call(updateRelatedMonthSaga, false);
+}
+
+function* nextYearSaga() {
+  yield call(updateRelatedMonthSaga, true);
+}
+
+function* updateRelatedMonthSaga(isNext) {
+  const relatedMonth = yield select((state) => state.date.relatedMonth);
+  yield put(
+    updateRelatedMonth(
+      relatedMonth.map((obj) => ({
+        ...obj,
+        year: obj.year + (isNext ? 1 : -1),
+      }))
+    )
+  );
+}
+
 function* prevRelatedYearSaga() {
-  yield call(updateRelatedYearSage, -10);
+  yield call(updateRelatedYearSage, false);
 }
 
 function* nextRelatedYearSaga() {
-  yield call(updateRelatedYearSage, 10);
+  yield call(updateRelatedYearSage, true);
 }
 
-function* updateRelatedYearSage(amount = 0) {
-  const { relatedYear, selectedDate } = yield select((state) => state.date);
+function* updateRelatedYearSage(isNext) {
+  const { relatedYear } = yield select((state) => state.date);
 
   yield put(
-    plusRelatedYear({
-      relatedYear: relatedYear.map((num) => num + amount),
-      selectedDate: {
-        ...selectedDate,
-        year: selectedDate.year + amount,
-        day: 1,
-      },
+    updateRelatedYear({
+      relatedYear: relatedYear.map((num) => num + (isNext ? 10 : -10)),
     })
   );
 }
@@ -124,16 +140,20 @@ function* watchSwitchDate() {
   yield takeLatest(switchDate, switchDateSaga);
 }
 
-function* watchPlusDay() {
-  yield takeLatest(plusDay, plusDaySaga);
+function* watchPrevMonth() {
+  yield takeLatest(prevMonth, prevMonthSaga);
 }
 
-function* watchPlusMonth() {
-  yield takeLatest(plusMonth, plusMonthSaga);
+function* watchNextMonth() {
+  yield takeLatest(nextMonth, nextMonthSaga);
 }
 
-function* watchPlusYear() {
-  yield takeLatest(plusYear, plusYearSaga);
+function* watchPrevYear() {
+  yield takeLatest(prevYear, prevYearSaga);
+}
+
+function* watchNextYear() {
+  yield takeLatest(nextYear, nextYearSaga);
 }
 
 function* watchPrevRelatedYear() {
@@ -147,9 +167,10 @@ function* watchNextRelatedYear() {
 const all = [
   watchSetupDate(),
   watchSwitchDate(),
-  watchPlusDay(),
-  watchPlusMonth(),
-  watchPlusYear(),
+  watchPrevMonth(),
+  watchNextMonth(),
+  watchPrevYear(),
+  watchNextYear(),
   watchPrevRelatedYear(),
   watchNextRelatedYear(),
 ];

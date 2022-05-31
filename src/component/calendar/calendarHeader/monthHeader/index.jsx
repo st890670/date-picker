@@ -3,18 +3,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons/faAngleLeft";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons/faAngleRight";
-import { plusYear } from "redux/slice/dateSlice";
+import { prevYear, nextYear } from "redux/slice/dateSlice";
 
 function MonthHeader({ onTitleClick = () => {} }) {
   const dispatch = useDispatch();
-  const { year } = useSelector((state) => state.date.selectedDate);
+  const relatedMonth = useSelector((state) => state.date.relatedMonth);
 
   const handleClickPrev = useCallback(() => {
-    dispatch(plusYear(-1));
+    dispatch(prevYear());
   }, [dispatch]);
 
   const handleClickNext = useCallback(() => {
-    dispatch(plusYear(1));
+    dispatch(nextYear());
   }, [dispatch]);
 
   return (
@@ -25,7 +25,7 @@ function MonthHeader({ onTitleClick = () => {} }) {
         onClick={handleClickPrev}
       />
       <div className="cursor-pointer" onClick={onTitleClick}>
-        {year}
+        {relatedMonth[0].year}
       </div>
       <FontAwesomeIcon
         className="cursor-pointer"

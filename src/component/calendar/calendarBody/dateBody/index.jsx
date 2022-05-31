@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import WeekBar from "component/calendar/calendarBody/dateBody/weekBar";
 import ItemContainer, {
@@ -11,32 +11,6 @@ function DateBody() {
   const { currentDate, selectedDate, relatedDate } = useSelector(
     (state) => state.date
   );
-  const [dateGroup, setDateGroup] = useState([]);
-
-  const arrangeGroup = useCallback(() => {
-    if (!relatedDate.length) {
-      return;
-    }
-
-    let tempCount = 0;
-    let tempGroup = [];
-    const group = relatedDate.reduce((result, date) => {
-      tempCount++;
-      tempGroup.push(date);
-      if (tempCount >= 7) {
-        result.push(tempGroup);
-        tempCount = 0;
-        tempGroup = [];
-      }
-      return result;
-    }, []);
-
-    setDateGroup(group);
-  }, [relatedDate]);
-
-  useEffect(() => {
-    arrangeGroup();
-  }, [arrangeGroup]);
 
   const calculateDateType = useCallback(
     ({ year, month, day }) => {
@@ -52,7 +26,8 @@ function DateBody() {
         selectedDate.year === year &&
         selectedDate.month === month &&
         selectedDate.day === day;
-      const isDateOutofSelectedMonth = month !== selectedDate.month;
+      const isDateOutofSelectedMonth =
+        month !== relatedDate.target.month || year !== relatedDate.target.year;
 
       if (isCurrentDateToday && !isSelectedDateToday) {
         return Type.Highlight;
@@ -68,14 +43,28 @@ function DateBody() {
 
       return Type.Normal;
     },
-    [currentDate, selectedDate]
+    [relatedDate, currentDate, selectedDate]
   );
 
-  const renderDate = useMemo(() => {
-    if (!dateGroup.length) {
+  const renderRelatedDate = useMemo(() => {
+    if (!relatedDate.payload.length) {
       return <></>;
     }
-    return dateGroup.map((group, groupIndex) => (
+
+    let tempCount = 0;
+    let tempGroup = [];
+    const group = relatedDate.payload.reduce((result, date) => {
+      tempCount++;
+      tempGroup.push(date);
+      if (tempCount >= 7) {
+        result.push(tempGroup);
+        tempCount = 0;
+        tempGroup = [];
+      }
+      return result;
+    }, []);
+
+    return group.map((group, groupIndex) => (
       <div key={`row-${groupIndex}`} className="flex justify-between">
         {group.map((date) => (
           <ItemContainer
@@ -89,12 +78,12 @@ function DateBody() {
         ))}
       </div>
     ));
-  }, [dispatch, dateGroup, calculateDateType]);
+  }, [dispatch, relatedDate, calculateDateType]);
 
   return (
     <>
       <WeekBar />
-      {renderDate}
+      {renderRelatedDate}
     </>
   );
 }
