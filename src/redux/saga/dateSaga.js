@@ -12,7 +12,6 @@ import {
   prevRelatedYear,
   nextRelatedYear,
   updateRelatedYear,
-  updateSelectedDate,
 } from "redux/slice/dateSlice";
 import { convertDateToObj } from "util/dateUtil";
 
@@ -20,16 +19,9 @@ function* setupDateSaga(action) {
   const { payload: selectedDate } = action;
   const dateObj = convertDateToObj(selectedDate);
   const { year, month } = dateObj;
+  const relatedYear = buildRelatedYear(year);
+  const relatedMonth = buildRelatedMonth(year);
   const relatedDate = buildRelatedDate(year, month);
-  const firstOfRelatedYear = Math.floor(year / 10) * 10 - 1;
-  const relatedYear = new Array(12)
-    .fill(0)
-    .map((_, index) => firstOfRelatedYear + index);
-
-  const relatedMonth = new Array(12)
-    .fill(0)
-    .map((_, index) => ({ year, month: index + 1 }));
-
   yield put(
     successForSetup({
       selectedDate: { ...dateObj },
@@ -38,6 +30,15 @@ function* setupDateSaga(action) {
       relatedMonth,
     })
   );
+}
+
+function buildRelatedYear(year) {
+  const firstOfRelatedYear = Math.floor(year / 10) * 10 - 1;
+  return new Array(12).fill(0).map((_, index) => firstOfRelatedYear + index);
+}
+
+function buildRelatedMonth(year) {
+  return new Array(12).fill(0).map((_, index) => ({ year, month: index + 1 }));
 }
 
 function buildRelatedDate(year, month) {
@@ -52,18 +53,8 @@ function buildRelatedDate(year, month) {
 }
 
 function* switchDateSaga(action) {
-  const { payload: targetDate } = action;
-  yield call(updateDate, targetDate);
-}
-
-function* updateDate(targetDate) {
-  const prevSelectedDate = yield select((state) => state.date.selectedDate);
-  const { year, month, day } = targetDate;
-  if (prevSelectedDate.month !== month || prevSelectedDate.year !== year) {
-    yield put(setupDate(new Date(`${year}-${month}-${day}`)));
-  } else {
-    yield put(updateSelectedDate(targetDate));
-  }
+  const { year, month, day } = action.payload;
+  yield put(setupDate(new Date(`${year}-${month}-${day}`)));
 }
 
 function* prevMonthSaga() {
@@ -75,8 +66,8 @@ function* nextMonthSaga() {
 }
 
 function* updateRelatedDateSaga(isNext) {
-  const { target } = yield select((state) => state.date.relatedDate);
-  const { year, month } = target;
+  const { relatedDate } = yield select((state) => state.date);
+  const { year, month } = relatedDate.target;
 
   let newYear = year;
   if (isNext) {
@@ -92,6 +83,14 @@ function* updateRelatedDateSaga(isNext) {
       payload: buildRelatedDate(newYear, newMonth),
     })
   );
+
+  if (newYear > year) {
+    yield call(updateRelatedMonthSaga, true);
+  }
+
+  if (newYear < year) {
+    yield call(updateRelatedMonthSaga, false);
+  }
 }
 
 function* prevYearSaga() {
@@ -103,26 +102,35 @@ function* nextYearSaga() {
 }
 
 function* updateRelatedMonthSaga(isNext) {
-  const relatedMonth = yield select((state) => state.date.relatedMonth);
+  const { relatedMonth, relatedYear } = yield select((state) => state.date);
+  const newYear = relatedMonth[0].year + (isNext ? 1 : -1);
   yield put(
     updateRelatedMonth(
       relatedMonth.map((obj) => ({
         ...obj,
-        year: obj.year + (isNext ? 1 : -1),
+        year: newYear,
       }))
     )
   );
+
+  if (newYear > relatedYear[10]) {
+    yield call(updateRelatedYearSaga, true);
+  }
+
+  if (newYear < relatedYear[1]) {
+    yield call(updateRelatedYearSaga, false);
+  }
 }
 
 function* prevRelatedYearSaga() {
-  yield call(updateRelatedYearSage, false);
+  yield call(updateRelatedYearSaga, false);
 }
 
 function* nextRelatedYearSaga() {
-  yield call(updateRelatedYearSage, true);
+  yield call(updateRelatedYearSaga, true);
 }
 
-function* updateRelatedYearSage(isNext) {
+function* updateRelatedYearSaga(isNext) {
   const { relatedYear } = yield select((state) => state.date);
 
   yield put(

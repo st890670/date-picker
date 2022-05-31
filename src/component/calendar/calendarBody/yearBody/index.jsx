@@ -14,7 +14,11 @@ function YearBody() {
   const { year: selectedYear } = selectedDate;
 
   const renderType = useCallback(
-    (year) => {
+    (year, disabled) => {
+      if (disabled) {
+        return Type.Disabled;
+      }
+
       if (year === selectedYear) {
         return Type.Selected;
       }
@@ -27,9 +31,12 @@ function YearBody() {
   const renderYear = useMemo(() => {
     let count = 0;
     let tempGroup = [];
-    const group = relatedYear.reduce((result, monthNum) => {
+    const group = relatedYear.reduce((result, yearNum, index) => {
       count++;
-      tempGroup.push(+monthNum);
+      tempGroup.push({
+        year: +yearNum,
+        disabled: index === 0 || index === relatedYear.length - 1,
+      });
       if (count >= 4) {
         result.push(tempGroup);
         count = 0;
@@ -40,10 +47,10 @@ function YearBody() {
 
     return group.map((row, rowIndex) => (
       <div key={`month-row-${rowIndex}`} className="flex justify-between my-3">
-        {row.map((year, yearIndex) => (
+        {row.map(({ year, disabled }, columnIndex) => (
           <ItemContainer
-            key={`item-${yearIndex}`}
-            type={renderType(year)}
+            key={`item-${columnIndex}`}
+            type={renderType(year, disabled)}
             clickable
             onClick={() => {
               dispatch(switchDate({ ...selectedDate, year, day: 1 }));

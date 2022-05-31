@@ -8,7 +8,6 @@ const dateSlice = createSlice({
     selectedDate: {
       year: 0,
       month: 0,
-      week: 0,
       day: 0,
     },
     relatedDate: {
@@ -32,13 +31,6 @@ const dateSlice = createSlice({
       };
     },
     switchDate() {},
-    updateSelectedDate(state, action) {
-      const date = action.payload;
-      return {
-        ...state,
-        selectedDate: date,
-      };
-    },
     prevMonth() {},
     nextMonth() {},
     updateRelatedDate(state, action) {
@@ -73,7 +65,6 @@ export const {
   setupDate,
   successForSetup,
   switchDate,
-  updateSelectedDate,
   prevMonth,
   nextMonth,
   updateRelatedDate,

@@ -47,7 +47,7 @@ function MonthBody() {
             type={renderType(year, month)}
             clickable
             onClick={() => {
-              dispatch(switchDate({ ...selectedDate, month, day: 1 }));
+              dispatch(switchDate({ year, month, day: 1 }));
               dispatch(changeMode(CalendarMode.Date));
             }}
           >
@@ -56,7 +56,7 @@ function MonthBody() {
         ))}
       </div>
     ));
-  }, [dispatch, relatedMonth, selectedDate, renderType]);
+  }, [dispatch, relatedMonth, renderType]);
 
   return <div className="px-3">{renderMonth}</div>;
 }
