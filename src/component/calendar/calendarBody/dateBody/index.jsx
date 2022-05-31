@@ -1,12 +1,14 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import WeekBar from "component/calendar/calendarBody/dateBody/weekBar";
 import ItemContainer, {
   Type,
 } from "component/calendar/calendarBody/itemContainer";
 import { switchDate } from "redux/slice/dateSlice";
+import CalendarContext from "component/calendar/context";
 
 function DateBody() {
+  const { onSelectDate } = useContext(CalendarContext);
   const dispatch = useDispatch();
   const { currentDate, selectedDate, relatedDate } = useSelector(
     (state) => state.date
@@ -71,14 +73,17 @@ function DateBody() {
             key={`${date.year}-${date.month}-${date.day}`}
             type={calculateDateType(date)}
             clickable
-            onClick={() => dispatch(switchDate(date))}
+            onClick={() => {
+              dispatch(switchDate(date));
+              onSelectDate(date);
+            }}
           >
             {date.day}
           </ItemContainer>
         ))}
       </div>
     ));
-  }, [dispatch, relatedDate, calculateDateType]);
+  }, [dispatch, relatedDate, calculateDateType, onSelectDate]);
 
   return (
     <>
