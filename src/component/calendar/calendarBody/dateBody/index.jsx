@@ -4,8 +4,9 @@ import WeekBar from "component/calendar/calendarBody/dateBody/weekBar";
 import ItemContainer, {
   Type,
 } from "component/calendar/calendarBody/itemContainer";
-import { switchDate } from "redux/slice/dateSlice";
 import CalendarContext from "component/calendar/context";
+import { switchDate } from "redux/slice/dateSlice";
+import { expandCalendar } from "redux/slice/calendarSlice";
 
 function DateBody() {
   const { onSelectDate } = useContext(CalendarContext);
@@ -75,6 +76,7 @@ function DateBody() {
             clickable
             onClick={() => {
               dispatch(switchDate(date));
+              dispatch(expandCalendar(false));
               onSelectDate(date);
             }}
           >

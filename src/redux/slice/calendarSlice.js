@@ -4,6 +4,7 @@ import { CalendarMode } from "constant/calendar";
 const calendarSlice = createSlice({
   name: "calendar",
   initialState: {
+    show: false,
     mode: CalendarMode.Date,
   },
   reducers: {
@@ -14,8 +15,14 @@ const calendarSlice = createSlice({
         mode,
       };
     },
+    expandCalendar(state, action) {
+      return {
+        ...state,
+        show: action.payload,
+      };
+    },
   },
 });
 
-export const { changeMode } = calendarSlice.actions;
+export const { changeMode, expandCalendar } = calendarSlice.actions;
 export default calendarSlice.reducer;
