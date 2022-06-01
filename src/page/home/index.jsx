@@ -4,7 +4,10 @@ function Home() {
   return (
     <Calendar
       defaultDate={new Date()}
-      onSelectDate={(date) => console.log(date)}
+      onSelectDate={(date) => console.log("selected date: ", date)}
+      onInputChange={(value) => console.log("input value: ", value)}
+      inputContainerClass=""
+      calendarContainerClass=""
     />
   );
 }

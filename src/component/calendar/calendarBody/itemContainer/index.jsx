@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+
 const Type = {
   Highlight: "highlight",
   Selected: "selected",
@@ -16,9 +17,9 @@ function ItemContainer({
   const renderTypeCss = useMemo(() => {
     switch (type) {
       case Type.Highlight:
-        return "text-[#db3d44]";
+        return `text-[#DB3D44]`;
       case Type.Selected:
-        return "rounded-full bg-[#db3d44] text-[#ffffff]";
+        return `rounded-full bg-[#DB3D44] text-[#ffffff]`;
       case Type.Disabled:
         return "text-[#eeeeee]";
       case Type.Normal:
