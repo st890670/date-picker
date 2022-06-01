@@ -47,7 +47,7 @@ function CalendarMain() {
     }
 
     const isoDateObj = {
-      [InputType.Year]: year,
+      [InputType.Year]: `${year}`,
       [InputType.Month]: fillNumberToTens(month),
       [InputType.Day]: fillNumberToTens(day),
     };
