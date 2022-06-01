@@ -1,7 +1,7 @@
 # Date Picker
 ## Introduce
 
-It's a side project for **practice**. Try to implement a date picker **without any date dependency** such like Day.js or Moment.js. You can change date by updating input value or selecting date from calendar.
+It's a side project for **practice**. Try to implement a date picker **without any date library** such like Day.js and Moment.js. You can change date by updating input value or selecting date from calendar.
 
 ![](https://i.imgur.com/Y0NZSpsm.png)
 
@@ -13,8 +13,8 @@ It's a side project for **practice**. Try to implement a date picker **without a
 - Framework: Create React App
 - Css processor: Tailwind CSS
 - Icon: Font Awesome
-- Redux: redux, redux toolkit, redux saga
-- Git: husky and commitlint
+- Redux: Redux, Redux Toolkit, Redux Saga
+- Git: Husky and Commitlint
 
 ## API document
 
