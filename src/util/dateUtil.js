@@ -13,7 +13,7 @@ export const fillNumberToTens = (value) =>
   `${value}`.length === 1 ? `0${value}` : value;
 
 export const isValidDate = (year, month, day) => {
-  const date = new Date(`${year}-${month}-${day}`);
+  const date = new Date(`${year}/${month}/${day}`);
   return (
     date instanceof Date &&
     !isNaN(date) &&

@@ -42,7 +42,7 @@ function buildRelatedMonth(year) {
 }
 
 function buildRelatedDate(year, month) {
-  const firstDayOfCurrentMonth = new Date(`${year}-${month}-01`);
+  const firstDayOfCurrentMonth = new Date(`${year}/${month}/01`);
   return new Array(42).fill(0).map((_, index) => {
     const diffDay = index - firstDayOfCurrentMonth.getDay();
     const targetDate = new Date(
@@ -54,7 +54,7 @@ function buildRelatedDate(year, month) {
 
 function* switchDateSaga(action) {
   const { year, month, day } = action.payload;
-  yield put(setupDate(new Date(`${year}-${month}-${day}`)));
+  yield put(setupDate(new Date(`${year}/${month}/${day}`)));
 }
 
 function* prevMonthSaga() {

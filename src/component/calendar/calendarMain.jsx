@@ -75,7 +75,7 @@ function CalendarMain() {
       }
       if (isValidDate(year, month, day)) {
         setPrevValidDate((prev) => ({ ...prev, [type]: input[type] }));
-        dispatch(setupDate(new Date(`${year}-${month}-${day}`)));
+        dispatch(setupDate(new Date(`${year}/${month}/${day}`)));
       } else {
         setInput((prev) => ({ ...prev, [type]: prevValidDate[type] }));
       }
